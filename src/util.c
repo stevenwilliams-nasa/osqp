@@ -318,8 +318,6 @@ OSQPSettings* copy_settings(const OSQPSettings *settings) {
 /* ==================== DEBUG FUNCTIONS ======================= */
 
 
-#if defined(OSQP_ENABLE_DEBUG) && defined(OSQP_ENABLE_PRINTING)
-
 void print_csc_matrix(const OSQPCscMatrix* M,
                       const char*          name)
 {
@@ -341,6 +339,22 @@ void print_csc_matrix(const OSQPCscMatrix* M,
     }
   }
 }
+//      Matrix Printing       //
+////////////////////////////////
+void mat_print(const OSQPCscMatrix* M,
+                      const char*          name){
+    printf("%s:\n", name);
+    OSQPInt k = 0;
+
+    for(int i = 0; i < M->m; i++) {
+        printf("%3d: [", i);
+        for(int j = 0; j < M->n; j++) {
+          printf("%10.12f ", M->x[k++]);
+        }
+        printf("]\n");
+    }
+    printf("\n");
+  }
 
 void dump_csc_matrix(const OSQPCscMatrix* M,
                      const char*          file_name) {
@@ -390,16 +404,18 @@ void print_dns_matrix(const OSQPFloat* M,
   OSQPInt i, j;
 
   c_print("%s : \n\t", name);
-
+  c_print("[");
   for (i = 0; i < m; i++) {   // Cycle over rows
     for (j = 0; j < n; j++) { // Cycle over columns
       if (j < n - 1) {
         // c_print("% 14.12e,  ", M[j*m+i]);
+       
         c_print("% .3g,  ", M[j * m + i]);
 
       } else {
         // c_print("% 14.12e;  ", M[j*m+i]);
         c_print("% .3g;  ", M[j * m + i]);
+        
       }
     }
 
@@ -407,6 +423,7 @@ void print_dns_matrix(const OSQPFloat* M,
       c_print("\n\t");
     }
   }
+  c_print("]");
   c_print("\n");
 }
 
@@ -446,4 +463,10 @@ void print_vec_int(const OSQPInt* x,
   c_print("]\n");
 }
 
-#endif /* if defined(OSQP_ENABLE_DEBUG) && defined(OSQP_ENABLE_PRINTING) */
+
+
+//#if defined(OSQP_ENABLE_DEBUG) && defined(OSQP_ENABLE_PRINTING)
+
+
+
+//#endif /* if defined(OSQP_ENABLE_DEBUG) && defined(OSQP_ENABLE_PRINTING) */

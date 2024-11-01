@@ -99,7 +99,7 @@ extern const char * OSQP_ERROR_MESSAGE[];
 # define OSQP_POLISHING             (0)
 
 // ADMM parameters
-# define OSQP_RHO                   (0.1)
+# define OSQP_RHO                   (0.8)
 # define OSQP_SIGMA                 (1E-06)
 # define OSQP_ALPHA                 (1.6)
 

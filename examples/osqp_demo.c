@@ -1,23 +1,31 @@
 #include "osqp.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "util.h"
+#include "printing.h"
+
 
 int main(void) {
 
   /* Load problem data */
-  OSQPFloat P_x[3] = { 4.0, 1.0, 2.0, };
-  OSQPInt   P_nnz  = 3;
-  OSQPInt   P_i[3] = { 0, 0, 1, };
-  OSQPInt   P_p[3] = { 0, 1, 3, };
-  OSQPFloat q[2]   = { 1.0, 1.0, };
-  OSQPFloat A_x[4] = { 1.0, 1.0, 1.0, 1.0, };
-  OSQPInt   A_nnz  = 4;
-  OSQPInt   A_i[4] = { 0, 1, 0, 2, };
-  OSQPInt   A_p[3] = { 0, 2, 4, };
-  OSQPFloat l[3]   = { 1.0, 0.0, 0.0, };
-  OSQPFloat u[3]   = { 1.0, 0.7, 0.7, };
+  //OSQPFloat P_x[3] = { 4.0, 1.0, 2.0, };
+  //OSQPInt   P_nnz  = 3;
+  //OSQPInt   P_i[3] = { 0, 0, 1, };
+  //OSQPInt   P_p[3] = { 0, 1, 3, };
+  OSQPFloat P_x[2] = { 1.0, 1.0, };
+  OSQPInt   P_nnz  = 2;
+  OSQPInt   P_i[2] = { 0, 1, };
+  OSQPInt   P_p[3] = { 0, 1, 2, };
+
+  OSQPFloat q[2]   = { -10.0, -10.0, };
+  OSQPFloat A_x[8] = { 1.0, -2.0, -1.0, 1.0, 2.0, -1.0, -2.0, -1.0, };
+  OSQPInt   A_nnz  = 8;
+  OSQPInt   A_i[8] = { 0, 1, 2, 3, 0, 1, 2, 3, };
+  OSQPInt   A_p[3] = { 0, 4, 8, };
+  OSQPFloat l[4]   = { -1.0e30, -1.0e30, -1.0e30, -1.0e30, };
+  OSQPFloat u[4]   = { 10.0, -4.0, -2.0, 6};
   OSQPInt   n = 2;
-  OSQPInt   m = 3;
+  OSQPInt   m = 4;
 
   /* Exitflag */
   OSQPInt exitflag;
@@ -31,6 +39,12 @@ int main(void) {
   /* Populate matrices */
   csc_set_data(A, m, n, A_nnz, A_x, A_i, A_p);
   csc_set_data(P, n, n, P_nnz, P_x, P_i, P_p);
+  mat_print(P, "Initial P");
+  mat_print(A, "Initial A");
+  print_vec(l, 4, "Initial l");
+  print_vec(u, 4, "Initial u");
+  
+
 
   /* Set default settings */
   settings = (OSQPSettings *)malloc(sizeof(OSQPSettings));

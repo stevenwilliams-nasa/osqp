@@ -60,6 +60,10 @@ OSQPInt adapt_rho(OSQPSolver* solver) {
   rho_new = compute_rho_estimate(solver);
 
   // Set rho estimate in info
+  printf("Rho before: \n");
+  printf("Rho1: %f\n", settings->rho);
+   printf("Rho2: %f\n", info->rho_estimate);
+
   info->rho_estimate = rho_new;
 
   // Check if the new rho is large or small enough and update it in case

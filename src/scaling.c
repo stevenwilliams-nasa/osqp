@@ -1,7 +1,10 @@
 #include "scaling.h"
+#include "types.h"
+#include "util.h"
+#include <stdio.h>
+#include "printing.h"
 
 #if OSQP_EMBEDDED_MODE != 1
-
 
 // Set values lower than threshold SCALING_REG to 1
 
@@ -38,12 +41,13 @@ void compute_inf_norm_cols_KKT(const OSQPMatrix*  P,
   //  [ A ]
   OSQPMatrix_col_norm_inf(P,D);
   OSQPMatrix_col_norm_inf(A, D_temp_A);
+  // first if the max between second and third
   OSQPVectorf_ew_max_vec(D, D_temp_A, D);
-
   // Second half
   //  [ A']
   //  [ 0 ]
   OSQPMatrix_row_norm_inf(A,E);
+  
 }
 
 OSQPInt scale_data(OSQPSolver* solver) {
@@ -66,6 +70,8 @@ OSQPInt scale_data(OSQPSolver* solver) {
   OSQPSettings*  settings = solver->settings;
   OSQPWorkspace* work     = solver->work;
 
+
+
   n = work->data->n;
 
   // Initialize scaling to 1
@@ -82,10 +88,20 @@ OSQPInt scale_data(OSQPSolver* solver) {
     //
 
     // Compute norm of KKT columns
+
+    c_print("Before scaling iter %d: \n", i);
+    //mat_print(work->data->P, "P");
+    print_csc_matrix(work->data->P, "P");
+    //print_vec(work->data->A, 2, "A");
+  
     compute_inf_norm_cols_KKT(work->data->P, work->data->A,
                               work->D_temp,
                               work->D_temp_A,
                               work->E_temp);
+    c_print("After scaling iter %d: \n", i);
+    //print_vec(work->data->P, 4, "P");
+    //print_vec(work->data->A, 2, "A");
+    c_print("-----------------\n");
 
     // Set to 1 values with 0 norms (avoid crazy scaling)
     limit_scaling_vector(work->D_temp);
