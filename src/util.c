@@ -356,6 +356,31 @@ void mat_print(const OSQPCscMatrix* M,
     printf("\n");
   }
 
+void mat_print_new(const OSQPCscMatrix* M, const char* name) {
+    printf("%s:\n", name);
+
+    // Iterate over rows and columns to print a dense version
+    for (int i = 0; i < M->m; i++) {
+        printf("%3d: [", i);
+        for (int j = 0; j < M->n; j++) {
+            // Find if there's a non-zero element at (i, j)
+            int found = 0;
+            for (int idx = M->p[j]; idx < M->p[j + 1]; idx++) {
+                if (M->i[idx] == i) {
+                    printf("%10.12f ", M->x[idx]); // Print non-zero element
+                    found = 1;
+                    break;
+                }
+            }
+            if (!found) {
+                printf("%10.12f ", 0.0); // Print zero for missing elements
+            }
+        }
+        printf("]\n");
+    }
+    printf("\n");
+}
+
 void dump_csc_matrix(const OSQPCscMatrix* M,
                      const char*          file_name) {
   OSQPInt j, i, row_strt, row_stop;
